@@ -1,5 +1,5 @@
 var button=document.querySelector('.btn')
-var inputSearch=document.querySelector('#search')
+var inputCity=document.querySelector('#city')
 
 // create list for previous searches
 {/* <div class="list-group">
@@ -13,16 +13,36 @@ var inputSearch=document.querySelector('#search')
 
 
 function getApi() {
-var APIKey= 'fe6bea862984553e2839a7b15d567c7a';
-var city=inputSearch.value
-var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=standard&appid=" + APIKey;
-
+var APIKey= '2be8ab84dbdf28d2330a1f83c3f60a1a';
+'http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}'
+var city=inputCity.value
+var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
+console.log(queryURL)
   fetch(queryURL)
     .then(function (response) {
       return response.json();
     })
     .then(function (data){
-    console.log(data)}
+    console.log(data)
+    console.log(data[0].lat)
+    console.log(data[0].lon)
+  
+  }
+    );
+  }
+function getWeather() {
+  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt=5&units=imperial&appid='+ APIKey
+console.log(weatherURL)
+  fetch(weatherURL)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data){
+    console.log(data)
+    // console.log(data.name)
+    // console.log(data)
+  
+  }
     );
   }
 
