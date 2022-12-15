@@ -1,19 +1,30 @@
 var button=document.querySelector('.btn')
 var inputCity=document.querySelector('#city')
+var dailyW= document.querySelector('.dailyW')
+
+var today=dayjs().format("MM/DD/YYYY")
+
+var nextDay = "";
+// function returnDay() {
+// for (let i = 1; i < 6; i++){
+//   nextDay = dayjs().add(i, "day").format("MM/DD/YYYY");
+//   console.log(nextDay);
+// }
+// }
+// returnDay()
 
 // create list for previous searches
-{/* <div class="list-group">
+/* <div class="list-group">
 <a href="#" class="list-group-item list-group-item-action">
   Cras justo odio
 </a>
-</div> */}
+</div> */
 
 // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 
 
-
-function getApi() {
 var APIKey= '2be8ab84dbdf28d2330a1f83c3f60a1a';
+function getApi() {
 'http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}'
 var city=inputCity.value
 var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
@@ -23,15 +34,16 @@ console.log(queryURL)
       return response.json();
     })
     .then(function (data){
-    console.log(data)
-    console.log(data[0].lat)
-    console.log(data[0].lon)
-  
+      var latitude= data[0].lat
+      var longitude =data[0].lon
+      getWeather(latitude,longitude)
+      console.log(data)
+    
   }
     );
   }
-function getWeather() {
-  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt=5&units=imperial&appid='+ APIKey
+function getWeather(latitude,longitude) {
+  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=5&units=imperial&appid='+ APIKey
 console.log(weatherURL)
   fetch(weatherURL)
     .then(function (response) {
@@ -39,8 +51,42 @@ console.log(weatherURL)
     })
     .then(function (data){
     console.log(data)
-    // console.log(data.name)
-    // console.log(data)
+
+    
+     
+    for (let i = 0; i < data.list.length; i++) {
+      var day = today
+      var temp =data.list[i].main.temp
+      var humidity =data.list[i].main.humidity
+      var wind =data.list[i].wind.speed
+      nextDay = dayjs().add(i+1, "day").format("MM/DD/YYYY");
+
+      var div1=document.createElement('div');
+      div1.setAttribute("class", "class='col-12 col-sm-6 col-lg-3'")
+      dailyW.appendChild(div1)
+      var divClass= document.createElement('div')
+      divClass.setAttribute("class","card text-center py-3 mx-3")
+      div1.appendChild(divClass)
+      var date= document.createElement('h6')
+      date.textContent= "Date: " + nextDay
+      divClass.append(date)
+      var temperature= document.createElement('p')
+      temperature.textContent= "Temp: " + temp+ "°F"
+      divClass.append(temperature)
+      var windy= document.createElement('p')
+      windy.textContent= "Wind: " + wind
+      divClass.append(windy)
+      var humid= document.createElement('p')
+      humid.textContent= "Humidity: " + humidity
+      divClass.append(humid)
+
+
+
+
+
+
+      
+    }
   
   }
     );
