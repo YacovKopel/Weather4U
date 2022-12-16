@@ -1,6 +1,10 @@
 var button=document.querySelector('.btn')
 var inputCity=document.querySelector('#city')
 var dailyW= document.querySelector('.dailyW')
+var cityName=document.querySelector('.cityName')
+var tempNow=document.querySelector('.temp')
+var windNow=document.querySelector('.wind')
+var humidNow= document.querySelector('.humidity')
 
 var today=dayjs().format("MM/DD/YYYY")
 
@@ -20,12 +24,11 @@ var nextDay = "";
 </a>
 </div> */
 
-// api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+
 
 
 var APIKey= '2be8ab84dbdf28d2330a1f83c3f60a1a';
 function getApi() {
-'http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}'
 var city=inputCity.value
 var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
 console.log(queryURL)
@@ -43,7 +46,7 @@ console.log(queryURL)
     );
   }
 function getWeather(latitude,longitude) {
-  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=5&units=imperial&appid='+ APIKey
+  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=6&units=imperial&appid='+ APIKey
 console.log(weatherURL)
   fetch(weatherURL)
     .then(function (response) {
@@ -51,15 +54,24 @@ console.log(weatherURL)
     })
     .then(function (data){
     console.log(data)
+    // makes city names uppercase
+    let arr = inputCity.value.split(" ");
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+    }
+    var cityUp = arr.join(" ");
 
+    cityName.textContent= cityUp + '  ' + today
+    tempNow.textContent='Temp: '+ data.list[0].main.temp+ "°F"
+    windNow.textContent='Wind: '+ data.list[0].wind.speed+ 'MPH'
+    humidNow.textContent='Humidity: '+ data.list[0].main.humidity + '%'
     
      
-    for (let i = 0; i < data.list.length; i++) {
-      var day = today
+    for (let i = 1; i < data.list.length; i++) {
       var temp =data.list[i].main.temp
       var humidity =data.list[i].main.humidity
       var wind =data.list[i].wind.speed
-      nextDay = dayjs().add(i+1, "day").format("MM/DD/YYYY");
+      nextDay = dayjs().add(i, "day").format("MM/DD/YYYY");
 
       var div1=document.createElement('div');
       div1.setAttribute("class", "class='col-12 col-sm-6 col-lg-3'")
@@ -74,17 +86,11 @@ console.log(weatherURL)
       temperature.textContent= "Temp: " + temp+ "°F"
       divClass.append(temperature)
       var windy= document.createElement('p')
-      windy.textContent= "Wind: " + wind
+      windy.textContent= "Wind: " + wind+ ' MPH'
       divClass.append(windy)
       var humid= document.createElement('p')
-      humid.textContent= "Humidity: " + humidity
+      humid.textContent= "Humidity: " + humidity+ '%'
       divClass.append(humid)
-
-
-
-
-
-
       
     }
   
