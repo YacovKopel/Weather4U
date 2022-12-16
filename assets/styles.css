@@ -15,3 +15,8 @@
     border-bottom-left-radius: 5px;
     width: 100%;
 }
+/* for weather icons to fit in card */
+img{
+    width: fit-content;
+    align-self: center;
+}
