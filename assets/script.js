@@ -5,31 +5,49 @@ var cityName=document.querySelector('.cityName')
 var tempNow=document.querySelector('.temp')
 var windNow=document.querySelector('.wind')
 var humidNow= document.querySelector('.humidity')
-var searchCity=document.querySelector('.searchCity')
+var searchCity=document.querySelector('.cityListContainer')
 var cityBtn= document.querySelector('.cityButton')
 
 var APIKey= '2be8ab84dbdf28d2330a1f83c3f60a1a';
 var today=dayjs().format("MM/DD/YYYY")
 var nextDay = "";
+var searchCities=[]
 
+function init(){
+  var listName= JSON.parse(localStorage.getItem("cityData"))
+    if (listName !== null) {
+      searchCities = listName;
+    } 
+    saveToList()
+};
 // create list for previous searches
 function saveToList(){
-var newtab=document.createElement('div')
-newtab.setAttribute("class","list-group mt-3")
-searchCity.appendChild(newtab)
+searchCity.innerHTML="";
+for (let i = 0; i < searchCities.length; i++) {
+var selectedCity= searchCities[i]
 var newName= document.createElement('button')
 newName.setAttribute("type", "button")
-newName.setAttribute("href", "#")
-newName.setAttribute("class","list-group-item list-group-item-action btn cityButton" )
-var listName= JSON.parse(localStorage.getItem("cityData"))
-newName.textContent=listName
-newtab.append(newName)
+newName.setAttribute("class"," col-12 btn bg-light cityButton mt-3")
+newName.setAttribute("data-city",selectedCity)
+newName.textContent=selectedCity
+searchCity.appendChild(newName)
+console.log(searchCities)}
+console.log(searchCities)
 }
 
+// function lastEl(){
+//   // var selectedCity= searchCities[i]
+//   var newName= document.createElement('button')
+//   newName.setAttribute("type", "button")
+//   newName.setAttribute("class"," col-12 btn bg-light cityButton mt-3")
+//   newName.setAttribute("data-city", city)
+//   console.log(lastCity)
+//   newName.textContent=lastCity
+//   searchCity.appendChild(newName)
+//   }
 
 // gets lat and lon of city
 function getApi(city) {
-var city=inputCity.value
 var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
 console.log(queryURL)
   fetch(queryURL)
@@ -42,9 +60,7 @@ console.log(queryURL)
       // call getWeather function and pass into it the lat and lon to get city weather data
       getWeather(latitude,longitude)
       console.log(data)
-    
-  }
-    );
+  });
   }
 
   // gets city weather
@@ -59,19 +75,20 @@ console.log(weatherURL)
     console.log(data)
 
  // makes city names uppercase
- let arr = inputCity.value.split(" ");
- for (var i = 0; i < arr.length; i++) {
-     arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
- }
- var cityUp = arr.join(" ");
-
+//  let arr = inputCity.value.split(" ");
+//  for (var i = 0; i < arr.length; i++) {
+//      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+//  }
+//  var cityUp = arr.join(" ");
+// console.log(cityUp)
 
 // todays weather at city
- cityName.textContent= cityUp + '  ' + today
+ cityName.textContent= data.city.name + '  ' + today
  tempNow.textContent='Temp: '+ data.list[0].main.temp+ "°F"
  windNow.textContent='Wind: '+ data.list[0].wind.speed+ 'MPH'
  humidNow.textContent='Humidity: '+ data.list[0].main.humidity + '%'
  
+ dailyW.innerHTML=''
 //  loop to get 5 day forecast of weather in city
  for (let i = 1; i < data.list.length; i++) {
    var temp =data.list[i].main.temp
@@ -104,16 +121,31 @@ console.log(weatherURL)
    divClass.append(humid)
  }
 //  save into local Storage
- localStorage.setItem('cityData', JSON.stringify(cityUp))
 
 //  displays button with previous city search
- saveToList()
-
-  // var wat =JSON.parse(localStorage.getItem("cityData")) || []
   
   });
  
 }
-button.addEventListener('click', getApi)
-{
-console.log("click")}
+button.addEventListener('click', function(event){
+  event.preventDefault();
+  var city=inputCity.value.trim()
+  searchCities.push(city)
+  localStorage.setItem('cityData', JSON.stringify(searchCities))
+  getApi(city);
+  init();
+})
+
+searchCity.addEventListener('click', function(event){
+console.log("Click")
+var element= event.target;
+console.log(element);
+if (element.matches('button')){
+var city= element.getAttribute("data-city")
+  console.log(typeof(city))
+getApi(city)
+}
+
+})
+
+init()
