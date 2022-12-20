@@ -11,8 +11,11 @@ var cityBtn= document.querySelector('.cityButton')
 var APIKey= '2be8ab84dbdf28d2330a1f83c3f60a1a';
 var today=dayjs().format("MM/DD/YYYY")
 var nextDay = "";
+
+// array of searched Cities
 var searchCities=[]
 
+// gets last searched cities to save to webpage
 function init(){
   var listName= JSON.parse(localStorage.getItem("cityData"))
     if (listName !== null) {
@@ -31,25 +34,13 @@ newName.setAttribute("class"," col-12 btn bg-light cityButton mt-3")
 newName.setAttribute("data-city",selectedCity)
 newName.textContent=selectedCity
 searchCity.appendChild(newName)
-console.log(searchCities)}
-console.log(searchCities)
+}
 }
 
-// function lastEl(){
-//   // var selectedCity= searchCities[i]
-//   var newName= document.createElement('button')
-//   newName.setAttribute("type", "button")
-//   newName.setAttribute("class"," col-12 btn bg-light cityButton mt-3")
-//   newName.setAttribute("data-city", city)
-//   console.log(lastCity)
-//   newName.textContent=lastCity
-//   searchCity.appendChild(newName)
-//   }
 
 // gets lat and lon of city
 function getApi(city) {
 var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
-console.log(queryURL)
   fetch(queryURL)
     .then(function (response) {
       return response.json();
@@ -59,28 +50,17 @@ console.log(queryURL)
       var longitude =data[0].lon
       // call getWeather function and pass into it the lat and lon to get city weather data
       getWeather(latitude,longitude)
-      console.log(data)
   });
   }
 
   // gets city weather
 function getWeather(latitude,longitude) {
   var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=6&units=imperial&appid='+ APIKey
-console.log(weatherURL)
   fetch(weatherURL)
     .then(function (response) {
       return response.json();
     })
     .then(function (data){
-    console.log(data)
-
- // makes city names uppercase
-//  let arr = inputCity.value.split(" ");
-//  for (var i = 0; i < arr.length; i++) {
-//      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
-//  }
-//  var cityUp = arr.join(" ");
-// console.log(cityUp)
 
 // todays weather at city
  cityName.textContent= data.city.name + '  ' + today
@@ -120,29 +100,26 @@ console.log(weatherURL)
    humid.textContent= "Humidity: " + humidity+ '%'
    divClass.append(humid)
  }
-//  save into local Storage
-
-//  displays button with previous city search
   
   });
  
 }
+// updates page with weather info when search button pressed
 button.addEventListener('click', function(event){
   event.preventDefault();
   var city=inputCity.value.trim()
   searchCities.push(city)
+  //  save into local Storage
   localStorage.setItem('cityData', JSON.stringify(searchCities))
   getApi(city);
   init();
 })
 
+// updates page when user selects previously searched city from list
 searchCity.addEventListener('click', function(event){
-console.log("Click")
 var element= event.target;
-console.log(element);
 if (element.matches('button')){
 var city= element.getAttribute("data-city")
-  console.log(typeof(city))
 getApi(city)
 }
 
