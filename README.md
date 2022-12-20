@@ -14,5 +14,5 @@ To use this page the user will fill the "City" input area. The user will then pr
 
 
 ##Deployment Link
-https://yacovkopel.github.io/Weather4U!/
+https://yacovkopel.github.io/Weather4U/
 
