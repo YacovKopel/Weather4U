@@ -40,7 +40,7 @@ searchCity.appendChild(newName)
 
 // gets lat and lon of city
 function getApi(city) {
-var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
+var queryURL ='https://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&appid='+APIKey 
   fetch(queryURL)
     .then(function (response) {
       return response.json();
@@ -55,7 +55,7 @@ var queryURL ='http://api.openweathermap.org/geo/1.0/direct?q='+city+'&limit=1&a
 
   // gets city weather
 function getWeather(latitude,longitude) {
-  var weatherURL= 'http://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=6&units=imperial&appid='+ APIKey
+  var weatherURL= 'https://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longitude+'&cnt=6&units=imperial&appid='+ APIKey
   fetch(weatherURL)
     .then(function (response) {
       return response.json();
