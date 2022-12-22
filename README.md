@@ -1,6 +1,6 @@
 # Weather4U
 
-##Description
+## Description
 This webpage was created to allow users to search any city's 5 day weather forecast. The page uses HTML CSS and JavaScript to allow this dynamic functionality. Users' recent searches will be saved as buttons so they can easily access the weather again when they choose to. 
 
 ## Installation
@@ -13,6 +13,6 @@ To use this page the user will fill the "City" input area. The user will then pr
 ![Screenshot of webpage](./assets/images/Weather4U.jpeg)
 
 
-##Deployment Link
+## Deployment Link
 https://yacovkopel.github.io/Weather4U/
 
